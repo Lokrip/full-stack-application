@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Список товаров &ndash; Слава</title>
+</head>
+<body>
+    <a data-th-href="@{/catalogue/products/create}">+ Создать товар</a>
+    <h1>Список товаров</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Товар</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr data-th-each="product : ${products}">
+                <td data-th-text="${product.id}"></td>
+                <td>
+                    <a 
+                        data-th-href="@{/catalogue/products/{productId}(productId=${product.id})}"
+                        data-th-text="${product.title}"
+                    ></a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
