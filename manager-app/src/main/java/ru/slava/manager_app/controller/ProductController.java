@@ -1,6 +1,9 @@
 package ru.slava.manager_app.controller;
 
+import java.util.NoSuchElementException;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +17,7 @@ import ru.slava.manager_app.entity.Product;
 import ru.slava.manager_app.service.ProductService;
 
 @Controller
-@RequestMapping("{productId:\\\\d+}")
+@RequestMapping("catalogue/products/{productId:\\d+}")
 public class ProductController {
     private final ProductService productService;
 
@@ -26,7 +29,9 @@ public class ProductController {
 
     @ModelAttribute("product")
     public Product product(@PathVariable("productId") int productId) {
-        return this.productService.findProduct(productId).orElseThrow();
+        return this.productService.findProduct(productId)
+                //catalogue.errors.product.not_found это ключь в messages.properties тоесть мы берем данные с ключа и передаем в ошибку
+                .orElseThrow(() -> new NoSuchElementException("catalogue.errors.product.not_found"));
     }
 
     //делаем так что мы должны получить цело численое число через \\d+
@@ -42,10 +47,18 @@ public class ProductController {
 
     @PostMapping("edit")
     public String updateProduct(
-        @ModelAttribute("product") Product product, 
+        @ModelAttribute("product") Product product,
         UpdateProductPayload payload
     ) {
         this.productService.updateProduct(product.getId(), payload.title(), payload.details());
         return "redirect:/catalogue/products/%d".formatted(product.getId());
+    }
+
+    @PostMapping("delete")
+    public String deleteProduct(
+        @ModelAttribute("product") Product product
+    ) {
+        this.productService.deleteProduct(product.getId());
+        return "redirect:/catalogue/products/list";
     }
 }

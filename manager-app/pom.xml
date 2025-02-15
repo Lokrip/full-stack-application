@@ -39,6 +39,15 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
+		<!--Эта зависимость позволяет использовать функционал валидации для
+		различных объектов и данных в приложении. В частности, она интегрирует
+		поддержку Java Bean Validation (например, с использованием Hibernate Validator)
+		для валидации полей и объектов.
+		-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
