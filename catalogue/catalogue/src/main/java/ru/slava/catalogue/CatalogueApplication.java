@@ -1,13 +1,13 @@
-package com.example.catalogue_service;
+package ru.slava.catalogue;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class CatalogueServiceApplication {
+public class CatalogueApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(CatalogueServiceApplication.class, args);
+		SpringApplication.run(CatalogueApplication.class, args);
 	}
 
 }

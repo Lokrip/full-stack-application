@@ -1,4 +1,4 @@
-package ru.slava.manager_app.repository;
+package ru.slava.catalogue.repository;
 
 import java.util.List;
 import java.util.Optional;

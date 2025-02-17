@@ -1,4 +1,4 @@
-package ru.slava.manager_app.service;
+package ru.slava.catalogue.service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -7,8 +7,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import ru.slava.manager_app.entity.Product;
-import ru.slava.manager_app.repository.ProductRepository;
+import ru.slava.catalogue.entity.Product;
+import ru.slava.catalogue.repository.ProductRepository;
 
 @Service
 public class DefaultProductService implements ProductService {
