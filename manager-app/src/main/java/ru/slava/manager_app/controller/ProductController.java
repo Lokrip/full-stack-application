@@ -3,36 +3,35 @@ package ru.slava.manager_app.controller;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import jakarta.validation.Valid;
+import ru.slava.manager_app.client.ProductRestClient;
 import ru.slava.manager_app.controller.payload.UpdateProductPayload;
 import ru.slava.manager_app.entity.Product;
-import ru.slava.manager_app.service.ProductService;
+import ru.slava.manager_app.exeption.BadRequestExeption;
 
 @Controller
 @RequestMapping("catalogue/products/{productId:\\d+}")
 public class ProductController {
-    private final ProductService productService;
+     private final ProductRestClient productRestClient;
 
 
     @Autowired
-    public ProductController(ProductService productService) {
-        this.productService = productService;
+    public ProductController(ProductRestClient productRestClient) {
+        this.productRestClient = productRestClient;
     }
 
     @ModelAttribute("product")
     public Product product(@PathVariable("productId") int productId) {
-        return this.productService.findProduct(productId)
+        return this.productRestClient.findProduct(productId)
                 //catalogue.errors.product.not_found это ключь в messages.properties тоесть мы берем данные с ключа и передаем в ошибку
                 .orElseThrow(() -> new NoSuchElementException("catalogue.errors.product.not_found"));
     }
@@ -54,21 +53,17 @@ public class ProductController {
         //для того чтобы мы получали элемент с @ModelAttribute("product") this.productService.findProduct(productId)
         //а не создовали экземпляр класса Product надо укозать binding = false
         @ModelAttribute(name = "product", binding = false) Product product,
-        @Valid UpdateProductPayload payload,
+        UpdateProductPayload payload,
         BindingResult bindingResult,
         Model model
     ) {
-        if(bindingResult.hasErrors()) {
+        try {
+            this.productRestClient.updateProduct(product.id(), payload.title(), payload.details());
+            return "redirect:/catalogue/products/%d".formatted(product.id());
+        } catch(BadRequestExeption exeption) {
             model.addAttribute("payload", payload);
-            model.addAttribute("errors", bindingResult.getAllErrors()
-                .stream()
-                .map(ObjectError::getDefaultMessage)
-                .toList());
-
+            model.addAttribute("errors", exeption.getErrors());
             return "catalogue/products/edit";
-        } else {
-            this.productService.updateProduct(product.getId(), payload.title(), payload.details());
-            return "redirect:/catalogue/products/%d".formatted(product.getId());
         }
     }
 
@@ -76,7 +71,7 @@ public class ProductController {
     public String deleteProduct(
         @ModelAttribute("product") Product product
     ) {
-        this.productService.deleteProduct(product.getId());
+        this.productRestClient.deleteProduct(product.id());
         return "redirect:/catalogue/products/list";
     }
 }

@@ -1,10 +1,18 @@
-spring.application.name=manager-app
-
-server.port=8081
 #В spring.profiles.active указываются активные профили Spring,
 #которые определяют, какие настройки
 #(конфигурационные файлы, бины и т. д.) будут использоваться в приложении.
-spring.profiles.active=docker,k8s,other,local
+spring:
+  application:
+    name: manager-app
+  profiles:
+    active: "docker,k8s,other,local"
+
+
+selmag:
+  services:
+    catalogue:
+      uri: http://localhost:8081
+
 
 #Если указан spring.profiles.active=dev,debug, Spring ищет файлы
 #application-dev.yml | application-dev.properties
