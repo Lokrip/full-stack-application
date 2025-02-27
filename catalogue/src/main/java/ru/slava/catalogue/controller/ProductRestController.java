@@ -1,6 +1,5 @@
 package ru.slava.catalogue.controller;
 
-import java.net.BindException;
 import java.util.Locale;
 import java.util.NoSuchElementException;
 
@@ -9,7 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
+import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -55,7 +54,7 @@ public class ProductRestController {
             if(bindingResult instanceof BindException exception) {
                 throw exception;
             } else {
-                throw new BindException();
+                throw new BindException(bindingResult);
             }
         } else {
             productService.updateProduct(productId, payload.title(), payload.details());
