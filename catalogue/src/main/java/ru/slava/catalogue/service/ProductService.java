@@ -1,13 +1,12 @@
 package ru.slava.catalogue.service;
 
-import java.util.List;
 import java.util.Optional;
 
 import ru.slava.catalogue.entity.Product;
 
 
 public interface ProductService {
-    List<Product> findAllProducts();
+    Iterable<Product> findAllProducts(String filter);
 
     Product createProduct(String title, String details);
 

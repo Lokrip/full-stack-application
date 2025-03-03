@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
 import ru.slava.catalogue.entity.Product;
 import ru.slava.catalogue.repository.ProductRepository;
 
@@ -20,7 +21,11 @@ public class DefaultProductService implements ProductService {
     }
 
     @Override
-    public List<Product> findAllProducts() {
+    public Iterable<Product> findAllProducts(String filter) {
+        if (filter != null && !filter.isBlank()) {
+            System.out.println(filter);
+            return this.productRepository.findAllByTitleLikeIgnoreCase(filter);
+        }
         return this.productRepository.findAll();
     }
 
@@ -35,7 +40,11 @@ public class DefaultProductService implements ProductService {
     }
 
     @Override
+    @Transactional
     public void updateProduct(Integer id, String title, String details) {
+        //этот код будет выполняться в рамке одной транзакций
+        //тоесть ищем запись и если в этой запсии будут изменение то мы изменим продукт
+        //и транзакция автоматический сохранит его
         this.productRepository.findById(id)
             .ifPresentOrElse(product -> {
                 product.setTitle(title);
@@ -46,6 +55,7 @@ public class DefaultProductService implements ProductService {
     }
 
     @Override
+    @Transactional
     public void deleteProduct(Integer id) {
         this.productRepository.deleteById(id);
     }
