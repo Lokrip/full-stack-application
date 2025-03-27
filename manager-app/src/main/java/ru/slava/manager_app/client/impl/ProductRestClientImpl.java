@@ -31,12 +31,12 @@ public class ProductRestClientImpl implements ProductRestClient {
     }
 
     @Override
-    public List<Product> findAllProducts() {
+    public List<Product> findAllProducts(String filter) {
         return this.restClient
             //Это метод запроса
             .get()
             //это uri адресс запроса
-            .uri("/catalogue-api/products")
+            .uri("/catalogue-api/products?filter={filter}", filter)
             //retrieve он нужен чтобы получить ответ
             .retrieve()
             //body он нужен чтобы переобразовывать тело ответа к какомуто виду

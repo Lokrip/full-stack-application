@@ -6,12 +6,18 @@ spring:
     name: manager-app
   profiles:
     active: "docker,k8s,other,local"
+  datasource:
+    url: jdbc:postgresql://localhost:5432/manager
+    username: lokrip
+    password: lol1234lol1234
 
 
 selmag:
   services:
     catalogue:
       uri: http://localhost:8081
+      username: catalogue_service_user
+      password: password
 
 
 #Если указан spring.profiles.active=dev,debug, Spring ищет файлы

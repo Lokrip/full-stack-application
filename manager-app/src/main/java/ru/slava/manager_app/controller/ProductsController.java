@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import ru.slava.manager_app.client.ProductRestClient;
 import ru.slava.manager_app.controller.payload.NewProductPayload;
@@ -25,8 +26,10 @@ public class ProductsController {
 
 
     @GetMapping("/list")
-    public String getProductsList(Model model) {
-        model.addAttribute("products", this.productRestClient.findAllProducts());
+    public String getProductsList(Model model,
+        @RequestParam(name = "filter", required = false) String filter) {
+        model.addAttribute("products", this.productRestClient.findAllProducts(filter));
+        model.addAttribute("filter", filter);
         return "catalogue/products/list";
     }
 

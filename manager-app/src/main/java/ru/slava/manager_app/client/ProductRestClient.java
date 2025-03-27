@@ -6,7 +6,7 @@ import java.util.Optional;
 import ru.slava.manager_app.entity.Product;
 
 public interface ProductRestClient {
-    List<Product> findAllProducts();
+    List<Product> findAllProducts(String filter);
 
     Product createProduct(String title, String details);
 
