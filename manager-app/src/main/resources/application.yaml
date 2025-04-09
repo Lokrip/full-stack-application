@@ -10,8 +10,37 @@ spring:
     url: jdbc:postgresql://localhost:5432/manager
     username: lokrip
     password: lol1234lol1234
-
-
+  security:
+    oauth2:
+      client:
+        #provider это поставщик
+        #oauth, тоесть то место где мы авторизуемся
+        #и аунтенфицируемся при применений open id connect
+        #тоесть это наш keycloak
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:8082/realms/selmag
+            #тут указываем от куда будем брать username
+            user-name-attribute: preferred_username
+        #registration это регистрация клиента в этой системе
+        #тоесть когда мы создали client в manager-app в keycloak
+        #это и есть регистрация
+        registration:
+          # manager-app:
+          #   provider: keycloak
+          #если мы используем один provider и одну регистрацию
+          #то можно укозать так
+          #таким оброзома данная регистраций автоматический свяжиться
+          #с провайдером keyclock више вот тут issuer-uri: http://localhost:8082/realms/selmag
+          keycloak:
+            client-id: manager-app
+            client-secret: 5BB4RthqmbA5NO0hqJmqwWdUK7c5BOz1
+            #тут указываем скопы каторый нам необходимо получать в токене
+            scope:
+              - openid
+              - view_catalogue
+              - edit_catalogue
+              - microprofile-jwt
 selmag:
   services:
     catalogue:

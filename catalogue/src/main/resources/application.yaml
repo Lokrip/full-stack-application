@@ -1,9 +1,15 @@
 spring:
+  security:
+    user:
+      #Этот конфиг создаст пользователя с именем catalogue_service_user, паролем password и ролью SERVICE.
+      name: catalogue_service_user
+      password: '{noop}password'
+      roles: SERVICE
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:2345/catalogue
-    username: catalogue
-    password: catalogue
+    url: jdbc:postgresql://localhost:5432/catalogue
+    username: lokrip
+    password: lol1234lol1234
   jpa:
     properties:
       hibernate:

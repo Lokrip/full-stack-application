@@ -23,8 +23,8 @@ public class DefaultProductService implements ProductService {
     @Override
     public Iterable<Product> findAllProducts(String filter) {
         if (filter != null && !filter.isBlank()) {
-            System.out.println(filter);
-            return this.productRepository.findAllByTitleLikeIgnoreCase(filter);
+            String newFilter = "%" + filter + "%";
+            return this.productRepository.namedSqlGetAllProductByTitle(newFilter);
         }
         return this.productRepository.findAll();
     }

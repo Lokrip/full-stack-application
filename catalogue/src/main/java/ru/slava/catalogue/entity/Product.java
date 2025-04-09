@@ -5,12 +5,25 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.NamedQueries;
+import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(schema = "catalogue", name = "t_product")
+//можно писать свой имменованые sql запросы
+//В данном коде используется аннотация @NamedQueries, которая
+//позволяет задать именованные запросы (Named Queries) в JPA (Java Persistence API).
+//Однако сам запрос "Product.findAllByTitleLikeIgnoringCase"
+@NamedQueries(
+    //каждый именнованый запрос должен иметь уникальное название в рамках всего приложения
+    @NamedQuery(
+        name = "Product.findAllByTitleLikeIgnoringCase",
+        query = "select p from Product p where p.title ilike :filter"
+    )
+)
 public class Product {
     public Product() {
     }
