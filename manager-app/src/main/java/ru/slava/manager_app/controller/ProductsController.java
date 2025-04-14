@@ -1,5 +1,8 @@
 package ru.slava.manager_app.controller;
 
+import java.security.Principal;
+
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,7 +30,13 @@ public class ProductsController {
 
     @GetMapping("/list")
     public String getProductsList(Model model,
-        @RequestParam(name = "filter", required = false) String filter) {
+        @RequestParam(name = "filter", required = false) String filter,
+        Principal principal) {
+        //LoggerFactory — это класс из библиотеки SLF4J, который используется для создания логгера.
+        //getLogger(Class<?>) — метод, который создаёт логгер, связанный с указанным классом.
+        //ProductController.class — это объект Class, представляющий класс ProductController.
+        // LoggerFactory.getLogger(ProductController.class)
+        //     .info("User: {}", principal);
         model.addAttribute("products", this.productRestClient.findAllProducts(filter));
         model.addAttribute("filter", filter);
         return "catalogue/products/list";

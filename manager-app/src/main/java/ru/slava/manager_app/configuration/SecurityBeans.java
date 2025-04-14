@@ -3,6 +3,7 @@ package ru.slava.manager_app.configuration;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,7 +31,7 @@ public class SecurityBeans {
             //(например, через логин и пароль), чтобы получить доступ к любому ресурсу на сервере.
             .authorizeRequests(authorizeRequests -> {
                 System.out.println("------------------------------yes---------------------------------------");
-                authorizeRequests.anyRequest().hasRole("MANAGER");
+                authorizeRequests.anyRequest().hasRole("CUSTOMER");
             })
             .oauth2Login(Customizer.withDefaults())
             .build();
@@ -41,13 +42,16 @@ public class SecurityBeans {
         OidcUserService oidcUserService = new OidcUserService();
         return userRequest -> {
             OidcUser oidcUser = oidcUserService.loadUser(userRequest);
-            List<SimpleGrantedAuthority> authorities = Optional.ofNullable(oidcUser.getClaimAsStringList("groups"))
-                .orElseGet(List::of)
-                .stream()
-                .filter(role -> role.startsWith("ROLE_"))
-                .map(SimpleGrantedAuthority::new)
-                .toList();
-            return new DefaultOidcUser(authorities, oidcUser.getIdToken());
+            List<GrantedAuthority> authorities = Stream.concat(
+                oidcUser.getAuthorities().stream(),
+                Optional.ofNullable(oidcUser.getClaimAsStringList("groups"))
+                        .orElseGet(List::of)
+                        .stream()
+                        .filter(role -> role.startsWith("ROLE_"))
+                        .map(SimpleGrantedAuthority::new)
+                        .map(GrantedAuthority.class::cast)
+                ).toList();
+            return new DefaultOidcUser(authorities, oidcUser.getIdToken(), oidcUser.getUserInfo());
         };
     }
 }
