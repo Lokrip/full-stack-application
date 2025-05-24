@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>[[${product.title}]] &ndash; Сельмаг</title>
+  </head>
+  <body>
+    <a data-th-href="@{/customer/products/list}">&larr; К списку товаров</a>
+    <h1 data-th-text="${product.title}"></h1>
+    <p data-th-text="${product.details}"></p>
+  </body>
+</html>
