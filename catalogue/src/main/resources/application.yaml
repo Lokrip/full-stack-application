@@ -5,6 +5,18 @@ spring:
       name: catalogue_service_user
       password: '{noop}password'
       roles: SERVICE
+    #Это говорит Spring Boot, что ваше приложение — ресурсный сервер OAuth2, и оно будет:
+    #Принимать и валидировать JWT токены,
+    #Когда ты настраиваешь свой сервер как OAuth2 Resource Server с
+    #oauth2ResourceServer.jwt(...), он автоматически ожидает,
+    #что каждый запрос к защищённым эндпоинтам будет приходить с заголовком:
+    #Authorization: Bearer <твой_JWT_токен>
+    #и мы можем делать авторизацию за сщет этого токена
+    #например брать его SCOPE 
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8082/realms/selmag
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/catalogue
@@ -22,6 +34,7 @@ spring:
     schemas:
       - public
       - catalogue
+
 server:
   port: 8081
 

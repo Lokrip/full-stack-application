@@ -34,7 +34,7 @@ spring:
           #с провайдером keyclock више вот тут issuer-uri: http://localhost:8082/realms/selmag
           keycloak:
             client-id: manager-app
-            client-secret: 5BB4RthqmbA5NO0hqJmqwWdUK7c5BOz1
+            client-secret: mzCELAYiSJaNV5BjpRH3shUzJITRFRyu
             #тут указываем скопы каторый нам необходимо получать в токене
             scope:
               - openid
@@ -47,6 +47,7 @@ selmag:
       uri: http://localhost:8081
       username: catalogue_service_user
       password: password
+      registration-id: keycloak
 
 
 #Если указан spring.profiles.active=dev,debug, Spring ищет файлы

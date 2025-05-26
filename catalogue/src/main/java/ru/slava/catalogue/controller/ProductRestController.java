@@ -1,12 +1,15 @@
 package ru.slava.catalogue.controller;
 
+import java.security.Principal;
 import java.util.Locale;
 import java.util.NoSuchElementException;
 
+import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -39,7 +42,11 @@ public class ProductRestController {
     }
 
     @GetMapping
-    public Product findProduct(@ModelAttribute(name = "product", binding = false) Product product) {
+    public Product findProduct(@ModelAttribute(name = "product", binding = false) Product product,
+                            Principal principal) {
+        // LoggerFactory.getLogger(ProductRestController.class)
+        //     .info("Principal: {}", ((JwtAuthenticationToken) principal).getToken()
+        //             .getClaimAsString("email"));
         return product;
     }
 

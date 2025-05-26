@@ -1,0 +1,14 @@
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      - POSTGRES_DB=catalogue
+      - POSTGRES_USER=lokrip
+      - POSTGRES_PASSWORD=lol1234lol1234
+    ports:
+      - 5432:5432
+    volumes:
+      - db_data_134:/var/lib/postgresql/data/
+
+volumes:
+  db_data_134:

@@ -31,9 +31,10 @@ public class SecurityBeans {
             //(например, через логин и пароль), чтобы получить доступ к любому ресурсу на сервере.
             .authorizeRequests(authorizeRequests -> {
                 System.out.println("------------------------------yes---------------------------------------");
-                authorizeRequests.anyRequest().hasRole("CUSTOMER");
+                authorizeRequests.anyRequest().hasRole("MANAGER");
             })
             .oauth2Login(Customizer.withDefaults())
+            .oauth2Client(Customizer.withDefaults())
             .build();
     }
 

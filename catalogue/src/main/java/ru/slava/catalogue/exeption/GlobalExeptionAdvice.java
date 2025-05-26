@@ -45,7 +45,7 @@ class GlobalExeptionAdvice {
                         this.messageSource.getMessage(
                             "errors.400.title",
                             new Object[0],
-                            "errors.40.0title",
+                            "errors.400.title",
                             locale
                         ));
         problemDetail.setProperty("errors",
