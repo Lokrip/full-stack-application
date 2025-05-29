@@ -9,4 +9,5 @@ public interface FavouriteProductRepository {
 
     Mono<Void> deleteByProductId(int productId);
 
+    Mono<FavouriteProduct> findByProductId(int productId);
 }

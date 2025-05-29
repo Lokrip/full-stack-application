@@ -7,4 +7,6 @@ public interface FavouriteProductService {
     Mono<FavouriteProduct> addProductToFavourites(int productId);
 
     Mono<Void> removeProductFromFavourites(int productId);
+
+    Mono<FavouriteProduct> findFavouriteProductByProduct(int productId);
 }

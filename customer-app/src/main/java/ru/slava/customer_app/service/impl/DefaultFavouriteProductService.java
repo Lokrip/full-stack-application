@@ -28,4 +28,9 @@ public class DefaultFavouriteProductService implements FavouriteProductService {
         return this.favouriteProductRepository.deleteByProductId(productId);
     }
 
+    @Override
+    public Mono<FavouriteProduct> findFavouriteProductByProduct(int productId) {
+        return this.favouriteProductRepository.findByProductId(productId);
+    }
+
 }

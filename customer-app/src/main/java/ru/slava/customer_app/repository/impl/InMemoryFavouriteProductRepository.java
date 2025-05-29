@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import ru.slava.customer_app.entity.FavouriteProduct;
 import ru.slava.customer_app.repository.FavouriteProductRepository;
@@ -25,8 +26,15 @@ public class InMemoryFavouriteProductRepository implements FavouriteProductRepos
     @Override
     public Mono<Void> deleteByProductId(int productId) {
         this.favouriteProducts.removeIf(
-            favouriteProduct -> favouriteProduct.getProductid() == productId);
+                favouriteProduct -> favouriteProduct.getProductid() == productId);
         return Mono.empty();
+    }
+
+    @Override
+    public Mono<FavouriteProduct> findByProductId(int productId) {
+        return Flux.fromIterable(this.favouriteProducts)
+            .filter(favouriteProduct -> favouriteProduct.getProductid() == productId)
+            .singleOrEmpty();
     }
 
 }
