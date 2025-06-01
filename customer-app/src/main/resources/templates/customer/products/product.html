@@ -18,10 +18,33 @@
     </form>
     <form
       method="post"
-      data-th-action="@{/customer/products/{productId}/delete-to-favourites(productId=${product.id})}"
+      data-th-action="@{/customer/products/{productId}/remove-to-favourites(productId=${product.id})}"
       data-th-if="${inFavourite}"
     >
       <button type="submit">Удалить из избранного</button>
     </form>
+
+    <h2>Отзывы</h2>
+    <form
+      method="post"
+      data-th-action="@{/customer/products/{productId}/create-review(productId=${product.id})}"
+    >
+    <label><input type="radio" name="rating" value="1"/> 1</label>
+    <label><input type="radio" name="rating" value="2"/> 2</label>
+    <label><input type="radio" name="rating" value="3"/> 3</label>
+    <label><input type="radio" name="rating" value="4"/> 4</label>
+    <label><input type="radio" name="rating" value="5"/> 5</label>
+    <br>
+    <label>
+      Отзыв:<br>
+      <textarea name="review"></textarea>
+    </label>
+    <br>
+    <button type="submit">Отправить отзыв</button>
+  </form>
+    <div data-th-each="review : ${reviews}">
+      <h3>[[${review.rating}]]*</h3>
+      <p data-th-text="${review.review}"></p>
+    </div>
   </body>
 </html>
