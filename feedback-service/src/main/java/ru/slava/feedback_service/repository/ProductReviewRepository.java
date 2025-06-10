@@ -1,8 +1,8 @@
-package ru.slava.customer_app.repository;
+package ru.slava.feedback_service.repository;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import ru.slava.customer_app.entity.ProductReview;
+import ru.slava.feedback_service.entity.ProductReview;
 
 public interface ProductReviewRepository {
     Mono<ProductReview> save(ProductReview productReview);

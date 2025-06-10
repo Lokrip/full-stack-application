@@ -1,4 +1,4 @@
-package ru.slava.customer_app.repository.impl;
+package ru.slava.feedback_service.repository.impl;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -8,8 +8,8 @@ import org.springframework.stereotype.Repository;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import ru.slava.customer_app.entity.FavouriteProduct;
-import ru.slava.customer_app.repository.FavouriteProductRepository;
+import ru.slava.feedback_service.entity.FavouriteProduct;
+import ru.slava.feedback_service.repository.FavouriteProductRepository;
 
 @Repository
 public class InMemoryFavouriteProductRepository implements FavouriteProductRepository {
@@ -33,8 +33,13 @@ public class InMemoryFavouriteProductRepository implements FavouriteProductRepos
     @Override
     public Mono<FavouriteProduct> findByProductId(int productId) {
         return Flux.fromIterable(this.favouriteProducts)
-            .filter(favouriteProduct -> favouriteProduct.getProductid() == productId)
-            .singleOrEmpty();
+                .filter(favouriteProduct -> favouriteProduct.getProductid() == productId)
+                .singleOrEmpty();
+    }
+
+    @Override
+    public Flux<FavouriteProduct> findAll() {
+        return Flux.fromIterable(this.favouriteProducts);
     }
 
 }

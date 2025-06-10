@@ -1,4 +1,4 @@
-package ru.slava.customer_app.service.impl;
+package ru.slava.feedback_service.service.impl;
 
 import java.util.UUID;
 
@@ -6,9 +6,9 @@ import org.springframework.stereotype.Service;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import ru.slava.customer_app.entity.ProductReview;
-import ru.slava.customer_app.repository.ProductReviewRepository;
-import ru.slava.customer_app.service.ProductReviewsService;
+import ru.slava.feedback_service.entity.ProductReview;
+import ru.slava.feedback_service.repository.ProductReviewRepository;
+import ru.slava.feedback_service.service.ProductReviewsService;
 
 @Service
 public class DefaultProductReviewsService implements ProductReviewsService {

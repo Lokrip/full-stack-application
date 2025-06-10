@@ -1,4 +1,4 @@
-package ru.slava.customer_app.repository.impl;
+package ru.slava.feedback_service.repository.impl;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -8,8 +8,8 @@ import org.springframework.stereotype.Repository;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import ru.slava.customer_app.entity.ProductReview;
-import ru.slava.customer_app.repository.ProductReviewRepository;
+import ru.slava.feedback_service.entity.ProductReview;
+import ru.slava.feedback_service.repository.ProductReviewRepository;
 
 @Repository
 public class InMemoryProductReviewRepository implements ProductReviewRepository {

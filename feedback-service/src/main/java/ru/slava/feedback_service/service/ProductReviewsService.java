@@ -1,8 +1,8 @@
-package ru.slava.customer_app.service;
+package ru.slava.feedback_service.service;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import ru.slava.customer_app.entity.ProductReview;
+import ru.slava.feedback_service.entity.ProductReview;
 
 public interface ProductReviewsService {
 

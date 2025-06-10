@@ -1,6 +1,7 @@
 package ru.slava.customer_app.client.impl;
 
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -30,6 +31,12 @@ public class WebClientProductClient implements ProductsClient {
         return this.webClient.get()
             .uri("/catalogue-api/products/{productId}", id)
             .retrieve()
-            .bodyToMono(Product.class);
+            .bodyToMono(Product.class)
+            // мы можем добавить обрабодку ошибок например Для WebClientResponseException
+            // эта ошибка вызываеться когда запись по id или другом название нету
+            // onErrorComplete он успешно завершает stream при наличий определнного типа ошибки
+            // тоесть вместо ошибки WebClientResponseException
+            // мы возврощаем нормальный stream только он будет пустой
+            .onErrorComplete(WebClientResponseException.NotFound.class);
     }
 }
