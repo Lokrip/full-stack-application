@@ -65,6 +65,18 @@ public class ProductController {
             @ModelAttribute(name = "product", binding = false) Mono<Product> productMono) {
         return productMono
                 .map(product -> product.id())
+                // В реактивном программировании на Java (например, с использованием Project
+                // Reactor — Mono, Flux), оператор flatMap используется для асинхронного
+                // преобразования элементов и «сплющивания» реактивных обёрток (Mono или Flux),
+                // полученных в результате этого преобразования.
+                // 🔍 Что делает flatMap?
+                // Принимает каждый элемент исходного потока (Flux или Mono).
+                // Применяет к нему функцию, которая возвращает новый Publisher (Mono или Flux).
+                // Подписывается на каждый полученный Publisher.
+                // Объединяет все их элементы в один результирующий поток.
+                // flatMap принимает поток данных и преобразует каждый элемент
+                // в новый поток (чаще всего Mono или Flux), а потом объединяет (сплющивает)
+                // все эти внутренние потоки в один общий.
                 // можно по разному подходить в формированию стрима
                 .flatMap(productId -> this.favouriteProductService
                         .addProductToFavourites(productId)
