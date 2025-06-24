@@ -14,13 +14,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import jakarta.validation.Valid;
 import reactor.core.publisher.Mono;
+import ru.slava.customer_app.client.FavouriteProductsClient;
+import ru.slava.customer_app.client.ProductReviewsClient;
 import ru.slava.customer_app.client.ProductsClient;
 import ru.slava.customer_app.controller.payload.NewProductReviewPayload;
 import ru.slava.customer_app.entity.Product;
-import ru.slava.customer_app.service.FavouriteProductService;
-import ru.slava.customer_app.service.ProductReviewsService;
 
 @Controller
 @RequestMapping(value = "customer/products/{productId:\\d+}")
@@ -28,16 +27,16 @@ public class ProductController {
 
     private final ProductsClient productsClient;
 
-    private final FavouriteProductService favouriteProductService;
+    private final FavouriteProductsClient favouriteProductsClient;
 
-    private final ProductReviewsService productReviewsService;
+    private final ProductReviewsClient productReviewsClient;
 
     public ProductController(ProductsClient productsClient,
-            FavouriteProductService favouriteProductService,
-            ProductReviewsService productReviewsService) {
-        this.productReviewsService = productReviewsService;
+            FavouriteProductsClient favouriteProductsClient,
+            ProductReviewsClient productReviewsClient) {
         this.productsClient = productsClient;
-        this.favouriteProductService = favouriteProductService;
+        this.productReviewsClient = productReviewsClient;
+        this.favouriteProductsClient = favouriteProductsClient;
     }
 
     @ModelAttribute(name = "product", binding = false)
@@ -50,10 +49,10 @@ public class ProductController {
     public Mono<String> getProductPage(@PathVariable("productId") int id, Model model) {
         // если у нас mono stream пустой добавить переменнуж inFavourite за ранее
         model.addAttribute("inFavourite", false);
-        return this.productReviewsService.findProductReviewsByProduct(id)
+        return this.productReviewsClient.findProductReviewsByProductId(id)
                 .collectList()
                 .doOnNext(productReviews -> model.addAttribute("reviews", productReviews))
-                .then(this.favouriteProductService.findFavouriteProductByProduct(id)
+                .then(this.favouriteProductsClient.findFavouriteProductByProductId(id)
                         // если нас mono stream не пустой то добавиться переменная inFavourite и
                         // перезапишется на true
                         .doOnNext(favouriteProduct -> model.addAttribute("inFavourite", true)))
@@ -78,7 +77,7 @@ public class ProductController {
                 // в новый поток (чаще всего Mono или Flux), а потом объединяет (сплющивает)
                 // все эти внутренние потоки в один общий.
                 // можно по разному подходить в формированию стрима
-                .flatMap(productId -> this.favouriteProductService
+                .flatMap(productId -> this.favouriteProductsClient
                         .addProductToFavourites(productId)
                         .thenReturn("redirect:/customer/products/%d".formatted(productId)));
     }
@@ -89,14 +88,14 @@ public class ProductController {
         return productMono
                 .map(product -> product.id())
                 // можно по разному подходить в формированию стрима
-                .flatMap(productId -> this.favouriteProductService
+                .flatMap(productId -> this.favouriteProductsClient
                         .removeProductFromFavourites(productId)
                         .thenReturn("redirect:/customer/products/%d".formatted(productId)));
     }
 
     @PostMapping("create-review")
     public Mono<String> createReview(@PathVariable("productId") int id,
-            @Valid @ModelAttribute NewProductReviewPayload payload,
+            @ModelAttribute NewProductReviewPayload payload,
             BindingResult bindingResult,
             Model model) {
         if (bindingResult.hasErrors()) {
@@ -105,11 +104,11 @@ public class ProductController {
             model.addAttribute("errors", bindingResult.getAllErrors().stream()
                     .map(ObjectError::getDefaultMessage)
                     .toList());
-            return this.favouriteProductService.findFavouriteProductByProduct(id)
+            return this.favouriteProductsClient.findFavouriteProductByProductId(id)
                     .doOnNext((favouriteProduct) -> model.addAttribute("inFavourite", true))
                     .thenReturn("customer/products/product");
         } else {
-            return this.productReviewsService.createProductReview(id, payload.rating(), payload.review())
+            return this.productReviewsClient.createProductReview(id, payload.rating(), payload.review())
                     .thenReturn("redirect:/customer/products/%d".formatted(id));
         }
     }
