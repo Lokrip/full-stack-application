@@ -18,6 +18,7 @@ import reactor.core.publisher.Mono;
 import ru.slava.customer_app.client.FavouriteProductsClient;
 import ru.slava.customer_app.client.ProductReviewsClient;
 import ru.slava.customer_app.client.ProductsClient;
+import ru.slava.customer_app.client.exception.ClientBadRequestException;
 import ru.slava.customer_app.controller.payload.NewProductReviewPayload;
 import ru.slava.customer_app.entity.Product;
 
@@ -96,21 +97,17 @@ public class ProductController {
     @PostMapping("create-review")
     public Mono<String> createReview(@PathVariable("productId") int id,
             @ModelAttribute NewProductReviewPayload payload,
-            BindingResult bindingResult,
             Model model) {
-        if (bindingResult.hasErrors()) {
-            model.addAttribute("inFavourite", false);
-            model.addAttribute("payload", payload);
-            model.addAttribute("errors", bindingResult.getAllErrors().stream()
-                    .map(ObjectError::getDefaultMessage)
-                    .toList());
-            return this.favouriteProductsClient.findFavouriteProductByProductId(id)
-                    .doOnNext((favouriteProduct) -> model.addAttribute("inFavourite", true))
-                    .thenReturn("customer/products/product");
-        } else {
-            return this.productReviewsClient.createProductReview(id, payload.rating(), payload.review())
-                    .thenReturn("redirect:/customer/products/%d".formatted(id));
-        }
+        return this.productReviewsClient.createProductReview(id, payload.rating(), payload.review())
+                .thenReturn("redirect:/customer/products/%d".formatted(id))
+                .onErrorResume(ClientBadRequestException.class, exception -> {
+                    model.addAttribute("inFavourite", false);
+                    model.addAttribute("payload", payload);
+                    model.addAttribute("errors", exception.getErrors());
+                    return this.favouriteProductsClient.findFavouriteProductByProductId(id)
+                            .doOnNext((favouriteProduct) -> model.addAttribute("inFavourite", true))
+                            .thenReturn("customer/products/product");
+                });
     }
 
     @ExceptionHandler(NoSuchElementException.class)
